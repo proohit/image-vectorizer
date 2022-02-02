@@ -1,0 +1,19 @@
+{
+  "name": "image-vectorizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/proohit/image-vectorizer.git"
+  },
+  "author": "proohit",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/proohit/image-vectorizer/issues"
+  },
+  "homepage": "https://github.com/proohit/image-vectorizer#readme"
+}
