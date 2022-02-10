@@ -1,8 +1,7 @@
 import { Fields, Files, IncomingForm } from "formidable";
-import Jimp from "jimp";
 import type { NextApiRequest, NextApiResponse } from "next";
 import potrace from "potrace";
-import fs from "fs";
+
 const convertImageToSvg = (image): Promise<unknown> => {
   return new Promise((resolve, reject) => {
     potrace.trace(image, function (err, svg) {
@@ -26,23 +25,6 @@ const readFormData = (req: NextApiRequest): Promise<Form> => {
     });
   });
 };
-
-async function retryRead(options, retries = 0) {
-  let { imagePath, maxRetries = 5 } = options;
-
-  let image = null;
-  try {
-    image = await Jimp.read(imagePath);
-  } catch (e) {
-    if (retries >= maxRetries) {
-      console.log(`Failed to read image after ${maxRetries} retries`);
-      throw e;
-    }
-    image = await retryRead(options, retries + 1);
-  }
-
-  return image;
-}
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const data: Form = await readFormData(req);
