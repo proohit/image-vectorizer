@@ -1,10 +1,10 @@
 import { Fields, Files, IncomingForm } from "formidable";
 import type { NextApiRequest, NextApiResponse } from "next";
-import potrace from "potrace";
+import { trace } from "potrace";
 
-const convertImageToSvg = (image): Promise<unknown> => {
+const convertImageToSvg = (image): Promise<string> => {
   return new Promise((resolve, reject) => {
-    potrace.trace(image, function (err, svg) {
+    trace(image, (err, svg) => {
       if (err) reject(err);
       resolve(svg);
     });
