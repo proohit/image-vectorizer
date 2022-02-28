@@ -6,6 +6,8 @@ import { AppNavbar } from "../src/components/AppNavbar";
 import { ImageForm } from "../src/components/ImageForm";
 import { ImagesView } from "../src/components/ImagesView";
 import SettingsForm from "../src/components/SettingsForm";
+import { Alert } from "react-bootstrap";
+import { notifications } from "../src/constants/notifications";
 
 export default function Home() {
   const [image, setImage] = useState<{
@@ -21,6 +23,11 @@ export default function Home() {
     steps: undefined,
   });
 
+  const [notification, setNotification] = useState<{
+    message: string;
+    severity: "danger" | "success" | "info" | "warning";
+  }>(null);
+
   const handleImageUpload: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     if (image.contents !== null) {
@@ -35,8 +42,21 @@ export default function Home() {
           method: "POST",
           body: formData,
         });
-        const svg = await res.text();
-        setResultingSvg(svg);
+        if (!res.ok || res.status < 200 || res.status >= 300) {
+          throw new Error(await res.json());
+        } else {
+          const svg = await res.text();
+          setResultingSvg(svg);
+          setNotification({
+            message: notifications.convertSuccessful,
+            severity: "success",
+          });
+        }
+      } catch (err) {
+        setNotification({
+          message: err.message,
+          severity: "danger",
+        });
       } finally {
         setSvgLoading(false);
       }
@@ -60,7 +80,7 @@ export default function Home() {
       <Container className="my-4">
         <Introduction />
       </Container>
-      <Container className="border">
+      <Container className="border p-3">
         <ImageForm
           onImageChange={handleImageChange}
           onImageUpload={handleImageUpload}
@@ -73,6 +93,21 @@ export default function Home() {
           outputSvg={resutlingSvg}
         />
       </Container>
+      {notification && (
+        <Container className="mt-4 p-0">
+          <Alert
+            dismissible
+            show={!!notification}
+            variant={notification.severity}
+            onClose={() => setNotification(null)}
+          >
+            <Alert.Heading>
+              {notification.severity.toLocaleUpperCase()}
+            </Alert.Heading>
+            <p>{notification.message}</p>
+          </Alert>
+        </Container>
+      )}
     </>
   );
 }

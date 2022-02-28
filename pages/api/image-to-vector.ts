@@ -10,7 +10,7 @@ const convertImageToSvg = (
   return new Promise((resolve, reject) => {
     const posterizer = new Posterizer(options);
     posterizer.loadImage(image, (_, err) => {
-      if (err) return reject(err);
+      if (err) reject(err);
       resolve(posterizer.getSVG());
     });
   });
