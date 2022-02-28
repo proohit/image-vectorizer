@@ -1,12 +1,16 @@
 import { Fields, Files, IncomingForm } from "formidable";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { trace } from "potrace";
+import { Posterizer, PosterizerOptions } from "potrace";
 
-const convertImageToSvg = (image): Promise<string> => {
+const convertImageToSvg = (
+  image,
+  options: PosterizerOptions
+): Promise<string> => {
   return new Promise((resolve, reject) => {
-    trace(image, (err, svg) => {
-      if (err) reject(err);
-      resolve(svg);
+    const posterizer = new Posterizer(options);
+    posterizer.loadImage(image, (_, err) => {
+      if (err) return reject(err);
+      resolve(posterizer.getSVG());
     });
   });
 };
@@ -30,7 +34,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const data: Form = await readFormData(req);
   const { fields, files } = data;
   const image = files.image[0];
-  const svg = await convertImageToSvg(image.filepath);
+  const svg = await convertImageToSvg(
+    image.filepath,
+    JSON.parse(fields.options as string)
+  );
   res.status(200).setHeader("Content-Type", "image/svg+xml").send(svg);
 };
 export const config = {

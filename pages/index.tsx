@@ -23,6 +23,11 @@ export default function Home() {
   const [svgLoading, setSvgLoading] = useState<boolean>(false);
   const [resutlingSvg, setResultingSvg] = useState<string>("");
 
+  const [settings, setSettings] = useState<{
+    fillStrategy?: string;
+    steps?: number;
+  }>({ fillStrategy: "dominant", steps: undefined });
+
   const handleImageUpload: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
     if (image.contents !== null) {
@@ -30,6 +35,7 @@ export default function Home() {
       setResultingSvg("");
       const formData = new FormData();
       formData.set("image", new Blob([image.contents], { type: image.type }));
+      formData.set("options", JSON.stringify(settings));
       formData.set("type", image.type);
       try {
         const res = await fetch("/api/image-to-vector", {
@@ -123,7 +129,43 @@ export default function Home() {
           <Accordion className="mt-4">
             <Accordion.Item eventKey="0">
               <Accordion.Header>Settings</Accordion.Header>
-              <Accordion.Body>Coming soon!</Accordion.Body>
+              <Accordion.Body>
+                <Form>
+                  <Form.Group controlId="settingsFillStrategy">
+                    <Form.Label>Fill Strategy</Form.Label>
+                    <Form.Select
+                      aria-label="Fill Strategy"
+                      onChange={(event) =>
+                        setSettings({
+                          ...settings,
+                          fillStrategy: event.target.value,
+                        })
+                      }
+                      value={settings.fillStrategy}
+                    >
+                      <option value="dominant">DOMINANT (default)</option>
+                      <option value="mean">MEAN</option>
+                      <option value="median">MEDIAN</option>
+                      <option value="spread">SPREAD</option>
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group controlId="settingsSteps">
+                    <Form.Label>Steps</Form.Label>
+                    <Form.Control
+                      aria-label="Steps"
+                      onChange={(event) =>
+                        setSettings({
+                          ...settings,
+                          steps: Number(event.target.value),
+                        })
+                      }
+                      value={settings.steps}
+                      type="number"
+                      placeholder="auto (default)"
+                    />
+                  </Form.Group>
+                </Form>
+              </Accordion.Body>
             </Accordion.Item>
           </Accordion>
         </Form>
