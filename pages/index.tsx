@@ -21,6 +21,11 @@ export default function Home() {
   const [settings, setSettings] = useState<Settings>({
     fillStrategy: "dominant",
     steps: undefined,
+    background: undefined,
+    blackOnWhite: undefined,
+    color: undefined,
+    turnPolicy: undefined,
+    threshold: undefined,
   });
 
   const [notification, setNotification] = useState<{
