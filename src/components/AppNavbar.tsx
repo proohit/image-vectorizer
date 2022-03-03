@@ -1,25 +1,23 @@
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import { GitHub } from "./icons/GitHub";
+import { GitHub } from "@mui/icons-material";
+import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 
 export const AppNavbar: React.FC = () => {
   return (
-    <Navbar bg="dark" variant="dark">
-      <Container>
-        <Navbar.Brand href="#">Image Vectorizer</Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="ms-auto">
-            <Nav.Link
-              target="_blank"
-              href="https://github.com/proohit/image-vectorizer"
-            >
-              <GitHub />
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <AppBar position="static" color="primary">
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          Image Vectorizer
+        </Typography>
+        <IconButton
+          sx={(theme) => ({
+            color: theme.palette.primary.contrastText,
+          })}
+          href="https://github.com/proohit/image-vectorizer"
+          target="_blank"
+        >
+          <GitHub />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
   );
 };

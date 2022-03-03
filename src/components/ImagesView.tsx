@@ -1,11 +1,15 @@
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Download } from "@mui/icons-material";
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { MouseEventHandler } from "react";
-import Image from "react-bootstrap/Image";
-import Spinner from "react-bootstrap/Spinner";
-import { ArrowRight } from "./icons/ArrowRight";
 import { getSvgDataUrl } from "../utils/svg";
+import { ArrowRight } from "./icons/ArrowRight";
 
 type Props = {
   inputImageLoading: boolean;
@@ -15,8 +19,7 @@ type Props = {
 };
 
 export const ImagesView: React.FC<Props> = ({
-  inputImage: image,
-  inputImageLoading: imageLoading,
+  inputImage,
   outputSvg: resutlingSvg,
   outputSvgLoading: svgLoading,
 }) => {
@@ -31,33 +34,51 @@ export const ImagesView: React.FC<Props> = ({
     document.body.removeChild(element);
   };
   return (
-    <Row className="align-items-center mt-4 p-3">
-      <Col xs="5" className="text-center">
-        {imageLoading ? <Spinner animation="border" /> : null}
-        {image && <Image src={URL.createObjectURL(new Blob([image]))} fluid />}
-      </Col>
-      <Col xs="2" className="text-center">
-        <ArrowRight />
-      </Col>
-      <Col xs="5" className="text-center">
-        {svgLoading ? <Spinner animation="border" /> : null}
-        {resutlingSvg && (
-          <>
-            <Row>
-              <Col>
-                <Image src={getSvgDataUrl(resutlingSvg)} fluid />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Button className="mt-4" onClick={downloadSvg}>
-                  Download
-                </Button>
-              </Col>
-            </Row>
-          </>
-        )}
-      </Col>
-    </Row>
+    <Paper sx={{ p: 2, my: 2 }}>
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        Preview
+      </Typography>
+      <Divider sx={{ mb: 2 }} />
+      <Grid
+        spacing={2}
+        container
+        direction={{ xs: "column", sm: "row" }}
+        alignItems="center"
+      >
+        <Grid item xs container justifyContent="center">
+          {inputImage && (
+            <img
+              width="100%"
+              src={URL.createObjectURL(new Blob([inputImage]))}
+            />
+          )}
+        </Grid>
+        <Grid item xs={1} container justifyContent="center">
+          <ArrowRight />
+        </Grid>
+        <Grid item xs container justifyContent="center">
+          {svgLoading ? (
+            <CircularProgress />
+          ) : (
+            resutlingSvg && (
+              <Grid container direction="column" spacing={1}>
+                <Grid item xs container justifyContent="center">
+                  <img width="100%" src={getSvgDataUrl(resutlingSvg)} />
+                </Grid>
+                <Grid item xs container justifyContent="center">
+                  <Button
+                    startIcon={<Download />}
+                    variant="contained"
+                    onClick={downloadSvg}
+                  >
+                    Download
+                  </Button>
+                </Grid>
+              </Grid>
+            )
+          )}
+        </Grid>
+      </Grid>
+    </Paper>
   );
 };

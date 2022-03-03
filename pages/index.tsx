@@ -1,13 +1,11 @@
-import { ChangeEventHandler, MouseEventHandler, useState } from "react";
-import Container from "react-bootstrap/Container";
-import { Introduction } from "../src/components/Introduction";
-import Settings from "../src/types/Settings";
+import { Alert, AlertProps, Container } from "@mui/material";
+import { MouseEventHandler, useState } from "react";
 import { AppNavbar } from "../src/components/AppNavbar";
 import { ImageForm } from "../src/components/ImageForm";
 import { ImagesView } from "../src/components/ImagesView";
-import SettingsForm from "../src/components/SettingsForm";
-import { Alert } from "react-bootstrap";
+import { Introduction } from "../src/components/Introduction";
 import { notifications } from "../src/constants/notifications";
+import Settings from "../src/types/Settings";
 
 export default function Home() {
   const [image, setImage] = useState<{
@@ -30,7 +28,7 @@ export default function Home() {
 
   const [notification, setNotification] = useState<{
     message: string;
-    severity: "danger" | "success" | "info" | "warning";
+    severity: AlertProps["severity"];
   }>(null);
 
   const handleImageUpload: MouseEventHandler<HTMLButtonElement> = async (e) => {
@@ -60,7 +58,7 @@ export default function Home() {
       } catch (err) {
         setNotification({
           message: err.message,
-          severity: "danger",
+          severity: "error",
         });
       } finally {
         setSvgLoading(false);
@@ -68,9 +66,8 @@ export default function Home() {
     }
   };
 
-  const handleImageChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleImageChange = (file: File) => {
     setImageLoading(true);
-    const file = e.target.files[0];
     const reader = new FileReader();
     reader.onload = () => {
       setImage({ contents: reader.result as ArrayBuffer, type: file.type });
@@ -82,15 +79,24 @@ export default function Home() {
   return (
     <>
       <AppNavbar />
-      <Container className="my-4">
+      <Container>
         <Introduction />
       </Container>
-      <Container className="border p-3">
+      <Container sx={{ mb: 2 }}>
         <ImageForm
           onImageChange={handleImageChange}
           onImageUpload={handleImageUpload}
+          settings={settings}
+          onSettingsChange={setSettings}
         />
-        <SettingsForm settings={settings} onSettingsChange={setSettings} />
+        {notification && (
+          <Alert
+            severity={notification.severity}
+            onClose={() => setNotification(null)}
+          >
+            {notification.message}
+          </Alert>
+        )}
         <ImagesView
           inputImageLoading={imageLoading}
           inputImage={image.contents}
@@ -98,21 +104,6 @@ export default function Home() {
           outputSvg={resutlingSvg}
         />
       </Container>
-      {notification && (
-        <Container className="mt-4 p-0">
-          <Alert
-            dismissible
-            show={!!notification}
-            variant={notification.severity}
-            onClose={() => setNotification(null)}
-          >
-            <Alert.Heading>
-              {notification.severity.toLocaleUpperCase()}
-            </Alert.Heading>
-            <p>{notification.message}</p>
-          </Alert>
-        </Container>
-      )}
     </>
   );
 }

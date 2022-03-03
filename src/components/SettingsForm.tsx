@@ -1,5 +1,19 @@
-import Form from "react-bootstrap/Form";
-import Accordion from "react-bootstrap/Accordion";
+import { Info } from "@mui/icons-material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Tooltip,
+} from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
 import Settings from "../types/Settings";
 
 type Props = {
@@ -12,47 +26,63 @@ const SettingsForm: React.FC<Props> = ({
   settings,
 }) => {
   return (
-    <Accordion className="mt-4">
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>Settings</Accordion.Header>
-        <Accordion.Body>
-          <Form>
-            <Form.Group controlId="settingsFillStrategy">
-              <Form.Label>Fill Strategy</Form.Label>
-              <Form.Select
-                aria-label="Fill Strategy"
-                onChange={(event) =>
-                  setSettings({
-                    ...settings,
-                    fillStrategy: event.target.value,
-                  })
-                }
-                value={settings.fillStrategy}
-              >
-                <option value="dominant">DOMINANT (default)</option>
-                <option value="mean">MEAN</option>
-                <option value="median">MEDIAN</option>
-                <option value="spread">SPREAD</option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group controlId="settingsSteps">
-              <Form.Label>Steps</Form.Label>
-              <Form.Control
-                aria-label="Steps"
-                onChange={(event) =>
-                  setSettings({
-                    ...settings,
-                    steps: Number(event.target.value),
-                  })
-                }
-                value={settings.steps}
-                type="number"
-                placeholder="auto (default)"
-              />
-            </Form.Group>
-          </Form>
-        </Accordion.Body>
-      </Accordion.Item>
+    <Accordion
+      sx={(theme) => ({
+        width: 1,
+        mb: theme.spacing(2),
+        mt: theme.spacing(2),
+      })}
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography>Settings</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack direction="column" width="100%" gap={2}>
+          <FormControl fullWidth>
+            <InputLabel id="settings-fillStrategy">Fill Strategy</InputLabel>
+            <Select
+              label="Fill Strategy"
+              labelId="settings-fillStrategy"
+              value={settings.fillStrategy}
+              onChange={(event) =>
+                setSettings({
+                  ...settings,
+                  steps: Number(event.target.value),
+                })
+              }
+              endAdornment={
+                <Tooltip title="Fill Strategy determines how fill color for each layer should be selected">
+                  <Info sx={{ mr: 2 }} />
+                </Tooltip>
+              }
+            >
+              <MenuItem value="dominant">DOMINANT (default)</MenuItem>
+              <MenuItem value="mean">MEAN</MenuItem>
+              <MenuItem value="median">MEDIAN</MenuItem>
+              <MenuItem value="spread">SPREAD</MenuItem>{" "}
+            </Select>
+          </FormControl>
+          <TextField
+            label="Steps"
+            type="number"
+            value={settings.steps}
+            placeholder="auto (default)"
+            onChange={(e) => {
+              setSettings({
+                ...settings,
+                steps: Number(e.target.value),
+              });
+            }}
+            InputProps={{
+              endAdornment: (
+                <Tooltip title="Steps specifies desired number of layers in resulting image">
+                  <Info />
+                </Tooltip>
+              ),
+            }}
+          />
+        </Stack>
+      </AccordionDetails>
     </Accordion>
   );
 };
