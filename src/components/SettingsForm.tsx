@@ -1,7 +1,10 @@
 import { Info } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+  Checkbox,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   InputLabel,
   MenuItem,
   Select,
@@ -38,6 +41,32 @@ const SettingsForm: React.FC<Props> = ({
       </AccordionSummary>
       <AccordionDetails>
         <Stack direction="column" width="100%" gap={2}>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={settings.colorized}
+                  onChange={(event) =>
+                    setSettings({
+                      ...settings,
+                      colorized: event.target.checked,
+                    })
+                  }
+                />
+              }
+              label={
+                <>
+                  Colorized
+                  <Tooltip
+                    sx={{ verticalAlign: "center" }}
+                    title="Attempts to create a colorized vector graphic"
+                  >
+                    <Info sx={{ mr: 2 }} />
+                  </Tooltip>
+                </>
+              }
+            />
+          </FormGroup>
           <FormControl fullWidth>
             <InputLabel id="settings-fillStrategy">Fill Strategy</InputLabel>
             <Select
@@ -47,7 +76,7 @@ const SettingsForm: React.FC<Props> = ({
               onChange={(event) =>
                 setSettings({
                   ...settings,
-                  steps: Number(event.target.value),
+                  fillStrategy: event.target.value,
                 })
               }
               endAdornment={
@@ -66,7 +95,7 @@ const SettingsForm: React.FC<Props> = ({
             label="Steps"
             type="number"
             value={settings.steps}
-            placeholder="auto (default)"
+            placeholder="leave empty for auto (default)"
             onChange={(e) => {
               setSettings({
                 ...settings,

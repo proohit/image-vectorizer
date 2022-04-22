@@ -18,6 +18,7 @@ export default function Home() {
 
   const [settings, setSettings] = useState<Settings>({
     fillStrategy: "dominant",
+    colorized: true,
     steps: undefined,
     background: undefined,
     blackOnWhite: undefined,

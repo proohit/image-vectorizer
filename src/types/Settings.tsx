@@ -6,5 +6,6 @@ type Settings = {
   color?: string;
   turnPolicy?: string;
   threshold?: number;
+  colorized?: boolean;
 };
 export default Settings;
