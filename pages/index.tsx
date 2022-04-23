@@ -15,6 +15,7 @@ import { ImageForm } from "../src/components/ImageForm";
 import { ImagesView } from "../src/components/ImagesView";
 import { Introduction } from "../src/components/Introduction";
 import { notifications } from "../src/constants/notifications";
+import { uploadImage } from "../src/services/ApiService";
 import Settings from "../src/types/Settings";
 
 const DropIndicator = styled("div")({
@@ -73,25 +74,13 @@ export default function Home() {
     if (image.contents !== null) {
       setSvgLoading(true);
       setResultingSvg("");
-      const formData = new FormData();
-      formData.set("image", new Blob([image.contents], { type: image.type }));
-      formData.set("options", JSON.stringify(settings));
-      formData.set("type", image.type);
       try {
-        const res = await fetch("/api/image-to-vector", {
-          method: "POST",
-          body: formData,
+        const svg = await uploadImage(image.contents, image.type, settings);
+        setResultingSvg(svg);
+        setNotification({
+          message: notifications.convertSuccessful,
+          severity: "success",
         });
-        if (!res.ok || res.status < 200 || res.status >= 300) {
-          throw new Error(await res.json());
-        } else {
-          const svg = await res.text();
-          setResultingSvg(svg);
-          setNotification({
-            message: notifications.convertSuccessful,
-            severity: "success",
-          });
-        }
       } catch (err) {
         setNotification({
           message: err.message,
