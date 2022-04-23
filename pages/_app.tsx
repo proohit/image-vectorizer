@@ -4,6 +4,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import * as React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import theme from "../src/styles/theme";
 import createEmotionCache from "../src/utils/createEmotionCache";
 
@@ -22,9 +24,10 @@ export default function MyApp(props: MyAppProps) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Component {...pageProps} />
+        <DndProvider backend={HTML5Backend}>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </DndProvider>
       </ThemeProvider>
     </CacheProvider>
   );

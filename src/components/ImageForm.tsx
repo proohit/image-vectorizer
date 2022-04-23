@@ -12,6 +12,7 @@ const FileNameLabel = styled("span")(({ theme }) => ({
 type Props = {
   onImageChange: (file: File) => void;
   onImageUpload: MouseEventHandler<HTMLButtonElement>;
+  fileName: string;
   settings: Settings;
   onSettingsChange: (newSettings: Settings) => void;
 };
@@ -20,24 +21,12 @@ export const ImageForm: React.FC<Props> = ({
   onImageChange,
   onImageUpload,
   onSettingsChange,
+  fileName,
   settings,
 }) => {
-  const [fileName, setFileName] = useState<string>("");
-
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     onImageChange(file);
-    setFileName(file.name);
-  };
-
-  const handleImageDrop = (ev) => {
-    ev.preventDefault();
-    const files = ev.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      onImageChange(file);
-      setFileName(file.name);
-    }
   };
 
   return (
@@ -48,17 +37,7 @@ export const ImageForm: React.FC<Props> = ({
         direction="column"
         gap={2}
       >
-        <Box
-          sx={{
-            border: 1,
-            width: 1,
-            textAlign: "center",
-            p: 2,
-            borderStyle: "dashed",
-          }}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleImageDrop}
-        >
+        <div>
           <Button
             startIcon={fileName ? null : <Upload />}
             variant="contained"
@@ -72,9 +51,9 @@ export const ImageForm: React.FC<Props> = ({
             <input type="file" hidden onChange={handleImageChange} />
           </Button>
           <Typography display="inline" sx={{ ml: 1 }}>
-            ... or drag and drop an image here
+            ... or drag and drop an image
           </Typography>
-        </Box>
+        </div>
         <SettingsForm onSettingsChange={onSettingsChange} settings={settings} />
         <Button
           startIcon={<Transform />}

@@ -20,6 +20,8 @@
     "potrace": "^2.1.8",
     "quantize": "^1.0.2",
     "react": "17.0.2",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "17.0.2",
     "sharp": "^0.30.4",
     "svgo": "^2.8.0"
