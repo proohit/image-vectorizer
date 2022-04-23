@@ -116,9 +116,11 @@ export default function Home() {
       <Box
         ref={drop}
         sx={
-          dragging && {
-            filter: "blur(2px)",
-          }
+          dragging
+            ? {
+                filter: "blur(2px)",
+              }
+            : undefined
         }
       >
         <AppNavbar />

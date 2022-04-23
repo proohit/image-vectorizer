@@ -1,7 +1,6 @@
 import { Transform, Upload } from "@mui/icons-material";
 import { Button, Paper, Stack, styled, Typography } from "@mui/material";
-import { Box } from "@mui/system";
-import { ChangeEvent, MouseEventHandler, useState } from "react";
+import { ChangeEvent, MouseEventHandler } from "react";
 import Settings from "../types/Settings";
 import SettingsForm from "./SettingsForm";
 
