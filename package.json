@@ -17,6 +17,7 @@
     "formidable": "^3.2.1",
     "nearest-color": "^0.4.4",
     "next": "latest",
+    "next-transpile-modules": "^9.0.0",
     "potrace": "^2.1.8",
     "quantize": "^1.0.2",
     "react": "17.0.2",
